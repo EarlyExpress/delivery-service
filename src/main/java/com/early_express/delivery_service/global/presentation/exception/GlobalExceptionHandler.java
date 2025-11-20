@@ -10,13 +10,14 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
  * 전역 예외 처리기
  * GlobalException과 공통 Spring 예외만 처리
  * */
-@RestControllerAdvice
+@RestControllerAdvice("com.early_express.delivery_service")
 @Slf4j
 public class GlobalExceptionHandler {
 

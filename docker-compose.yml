@@ -9,10 +9,11 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
       POSTGRES_DB: ${DB_NAME:-default_db}
       POSTGRES_INITDB_ARGS: "-E UTF-8"
+      PGDATA: /var/lib/postgresql/data
     ports:
       - "${DB_PORT:-5432}:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
       - ./init-scripts:/docker-entrypoint-initdb.d
     networks:
       - msa-network
@@ -24,9 +25,6 @@ services:
 
 volumes:
   postgres_data:
-    driver: local
 
 networks:
   msa-network:
-    name: msa-network
-    external: true

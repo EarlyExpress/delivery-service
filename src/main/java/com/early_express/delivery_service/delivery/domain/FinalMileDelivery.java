@@ -16,8 +16,7 @@ import java.time.LocalDateTime;
 public class FinalMileDelivery extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private String finalMileId = UuidUtils.generate();
+    private String finalMileId;
 
     @Column(nullable = false)
     private String orderId;
@@ -55,6 +54,13 @@ public class FinalMileDelivery extends BaseEntity {
         this.expectedTime = expectedTime;
     }
 
+    @PrePersist
+    public void generateId() {
+        // DB에 저장되기 직전에 ID가 null인지 확인하고 생성
+        if (this.finalMileId == null) {
+            this.finalMileId = UuidUtils.generate();
+        }
+    }
 
     //Agent가 배송 상품 전달받음
     public void pickedUp(LocalDateTime startedAt) {
@@ -105,5 +111,17 @@ public class FinalMileDelivery extends BaseEntity {
             throw new IllegalStateException("이미 완료된 배송은 취소할 수 없습니다. 반품 절차를 사용하세요.");
         }
         this.currentStatus = FinalMileDeliveryStatus.CANCELED;
+    }
+
+    public void markForSoftDeletion(String deletedBy) {
+
+        // 1. 💡 도메인 규칙 검증
+        if (this.currentStatus == FinalMileDeliveryStatus.DELIVERED) {
+            throw new IllegalStateException("이미 완료된 배송(" + this.currentStatus + ")은 Soft Delete 처리할 수 없습니다.");
+        }
+
+        // 2. 🚀 BaseEntity의 Soft Delete 메소드를 호출하여 플래그 변경
+        // 이 시점에서 isDeleted=true, deletedAt=now(), deletedBy=deletedBy가 설정됩니다.
+        super.delete(deletedBy);
     }
 }

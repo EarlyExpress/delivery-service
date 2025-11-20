@@ -39,7 +39,7 @@ public class SecurityConfig {
                 // CORS 설정
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
-                // ⭐ H2 Console을 위한 Headers 설정 추가
+                // H2 Console을 위한 Headers 설정 추가
                 .headers(headers -> headers
                         .frameOptions(frameOptions -> frameOptions.sameOrigin())
                 )
@@ -58,7 +58,7 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         // Health check
                         .requestMatchers("/health", "/info").permitAll()
-                        // ⭐ H2 Console 추가
+                        // H2 Console 추가
                         .requestMatchers("/h2-console/**").permitAll()
                         // 모든 요청 허용 (개발 초기 단계)
                         .anyRequest().permitAll()
