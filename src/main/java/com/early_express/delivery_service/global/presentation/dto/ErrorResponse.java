@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import org.springdoc.api.ErrorMessage;
 
 /**
  * 에러 응답 DTO

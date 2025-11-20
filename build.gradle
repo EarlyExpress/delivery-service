@@ -71,6 +71,7 @@ dependencies {
     // ===== Database =====
     // JPA ORM 지원
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+//    implementation 'org.postgresql:postgresql'
     // PostgreSQL JDBC 드라이버
     runtimeOnly 'org.postgresql:postgresql'
     // PostgreSQL Vector 확장 지원 (pgvector)
@@ -91,7 +92,7 @@ dependencies {
     // Spring Security 테스트
     testImplementation 'org.springframework.security:spring-security-test'
     // Kafka 테스트 지원
-    testImplementation 'org.springframework.kafka:spring-kafka-test'
+//    testImplementation 'org.springframework.kafka:spring-kafka-test'
     // H2 인메모리 데이터베이스 (테스트용)
     testImplementation 'com.h2database:h2'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

@@ -27,11 +27,8 @@ public class SwaggerConfig {
                                 .email("dev@early-express.com")))
                 .servers(List.of(
                         new Server()
-                                .url("http://localhost:4000")
-                                .description("로컬 개발 서버 (프록시)"),
-                        new Server()
                                 .url("/")
-                                .description("현재 서버 (상대 경로)")
+                                .description("현재 서버 (동일 Origin)")
                 ));
     }
 }
