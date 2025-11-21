@@ -3,13 +3,18 @@ package com.early_express.delivery_service.delivery.application.service;
 import com.early_express.delivery_service.delivery.domain.FinalMileDelivery;
 import com.early_express.delivery_service.delivery.domain.FinalMileDeliveryStatus;
 import com.early_express.delivery_service.delivery.infrastructure.FinalMileDeliveryRepository;
+import com.early_express.delivery_service.delivery.presentation.rest.dto.DeliveryResponseForPagination;
 import com.early_express.delivery_service.delivery.presentation.rest.dto.DeliveryStatusUpdateRequest;
 import com.early_express.delivery_service.delivery.presentation.rest.dto.FinalMileDeliveryDetailResponse;
 import com.early_express.delivery_service.delivery.presentation.rest.dto.FinalMileDeliveryRequest;
+import com.early_express.delivery_service.global.common.utils.PageUtils;
+import com.early_express.delivery_service.global.presentation.dto.PageResponse;
 import com.early_express.delivery_service.global.presentation.exception.DeliveryNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,23 +37,25 @@ public class FinalMileDeliveryService {
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public String registerDelivery(String agentId, FinalMileDeliveryRequest req) {
+
+        LocalDateTime now = LocalDateTime.now(); //현재 시간을 미리 정의
+
         FinalMileDelivery delivery = FinalMileDelivery.builder()
                 .orderId(req.orderId())
                 .agentId(agentId)
-                .currentStatus(FinalMileDeliveryStatus.PICKED_UP)
                 .deliveryAddress(req.deliveryAddress())
                 .recipientName(req.recipientName())
                 .recipientSlackId(req.recipientSlackId())
-                .startedAt(LocalDateTime.now())
                 .expectedTime(req.expectedTime())
                 .build();
 
-        delivery.pickedUp(delivery.getStartedAt());
-        finalMileDeliveryRepository.save(delivery);
+        delivery.pickedUp(now);
+        //finalMileDeliveryRepository.save(delivery); (수정 전)
+        FinalMileDelivery savedDelivery = finalMileDeliveryRepository.save(delivery); //(수정 후)
 
         //이벤트 발행
 
-        return delivery.getFinalMileId();
+        return savedDelivery.getFinalMileId();
 
     }
 
