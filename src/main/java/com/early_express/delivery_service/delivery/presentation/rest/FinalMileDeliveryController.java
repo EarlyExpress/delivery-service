@@ -1,17 +1,17 @@
 package com.early_express.delivery_service.delivery.presentation.rest;
 
+import com.early_express.delivery_service.delivery.application.service.DeliveryQueryService;
 import com.early_express.delivery_service.delivery.application.service.FinalMileDeliveryService;
-import com.early_express.delivery_service.delivery.presentation.rest.dto.DeliveryStatusUpdateRequest;
-import com.early_express.delivery_service.delivery.presentation.rest.dto.FinalMileDeliveryDetailResponse;
-import com.early_express.delivery_service.delivery.presentation.rest.dto.FinalMileDeliveryRequest;
-import com.early_express.delivery_service.delivery.presentation.rest.dto.FinalMileDeliveryResponse;
-import com.early_express.delivery_service.global.presentation.dto.ApiResponse;
+import com.early_express.delivery_service.delivery.presentation.rest.dto.*;
+import com.early_express.delivery_service.global.presentation.dto.PageResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name="업체배송 API", description = "배송 신규 생성 등의 기능을 위한 API")
@@ -20,6 +20,21 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class FinalMileDeliveryController {
     private final FinalMileDeliveryService finalMileDeliveryService;
+
+    private final DeliveryQueryService deliveryQueryService;
+
+    @GetMapping
+    // 🚨 제네릭 타입을 DeliveryResponseForPagination으로 통일했습니다.
+    public ResponseEntity<PageResponse<DeliveryResponseForPagination>> getDeliveries(
+            // 기본 페이지 설정: 0페이지, 크기 20, 시작 시간(startedAt)을 내림차순(최신순) 정렬
+            @PageableDefault(page = 0, size = 20, sort = "startedAt", direction = org.springframework.data.domain.Sort.Direction.DESC)
+            Pageable pageable) {
+
+        // Service는 PageResponse<DeliveryResponseForPagination>를 반환합니다.
+        PageResponse<DeliveryResponseForPagination> response = deliveryQueryService.getPaginatedDeliveries(pageable);
+
+        return ResponseEntity.ok(response);
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED) // HTTP 201 Created 반환
