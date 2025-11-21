@@ -71,7 +71,11 @@ public class FinalMileDelivery extends BaseEntity {
         }
 
         this.currentStatus = FinalMileDeliveryStatus.PICKED_UP;
-        this.startedAt = startedAt;
+
+        if (this.startedAt == null) {
+            this.startedAt = startedAt;
+        }
+
     }
 
     //배송 중
