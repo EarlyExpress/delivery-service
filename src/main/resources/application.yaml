@@ -61,6 +61,9 @@ spring:
     listener:
       ack-mode: manual  # 수동 승인 모드 (메시지 처리 보장)
       concurrency: 3  # 동시 처리 리스너 수
+    topic:
+      last-mile-departed: last-mile-departed
+      last-mile-completed: last-mile-completed
 
 # ===== 서버 포트 설정 =====
 server:
@@ -100,8 +103,11 @@ springdoc:
     oauth2-redirect-url: /swagger-ui/oauth2-redirect.html
   # 실제 서버 URL 설정 (프록시 URL)
   server:
-    url: http://localhost:4000
+    url: http://localhost:4030
 
+client:
+  last-mile-driver-service:
+    url: last-mile-driver-service
 
 # ========================================
 # 서비스별 커스터마이징이 필요한 설정 예시
