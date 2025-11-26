@@ -36,19 +36,19 @@ public class FinalMileDeliveryController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED) // HTTP 201 Created 반환
-    public FinalMileDeliveryResponse registerDelivery(
-            @Valid @RequestBody FinalMileDeliveryRequest req,
-            //@AuthenticationPrincipal UserDetailsImpl userDetails (인증 구현 후 적용)
-            @RequestHeader("X-Agent-Id") String agentId) {
-        // 1. Service 계층 호출 및 배송 ID (String) 반환
-        String finalMileId = finalMileDeliveryService.registerDelivery(agentId, req);
-
-        // 2. 응답 DTO 생성 및 반환
-//        return ApiResponse<FinalMileDeliveryDetailResponse>
-        return new FinalMileDeliveryResponse(finalMileId);
-    }
+//    @PostMapping
+//    @ResponseStatus(HttpStatus.CREATED) // HTTP 201 Created 반환
+//    public FinalMileDeliveryResponse registerDelivery(
+//            @Valid @RequestBody FinalMileDeliveryRequest req,
+//            //@AuthenticationPrincipal UserDetailsImpl userDetails (인증 구현 후 적용)
+//            @RequestHeader("X-Agent-Id") String agentId) {
+//        // 1. Service 계층 호출 및 배송 ID (String) 반환
+//        String finalMileId = finalMileDeliveryService.registerDelivery(agentId, req);
+//
+//        // 2. 응답 DTO 생성 및 반환
+////        return ApiResponse<FinalMileDeliveryDetailResponse>
+//        return new FinalMileDeliveryResponse(finalMileId);
+//    }
 
     @GetMapping("/{finalMileId}")
     @ResponseStatus(HttpStatus.OK)
