@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  */
 @FeignClient(
         name = "last-mile-driver-service",
-        url = "${client.last-mile-driver-service.url}",
+//        url = "${client.last-mile-driver-service.url}",
         configuration = LastMileDriverClientConfig.class
 )
 public interface LastMileDriverClient {
