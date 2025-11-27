@@ -1,6 +1,9 @@
 package com.early_express.delivery_service.delivery.presentation.internal;
 
+import com.early_express.delivery_service.delivery.application.service.DeliveryQueryService;
 import com.early_express.delivery_service.delivery.application.service.FinalMileDeliveryService;
+import com.early_express.delivery_service.delivery.application.service.dto.TodayDeliveryGroupResponse;
+import com.early_express.delivery_service.delivery.presentation.internal.dto.TodayDeliveryGroupInternalResponse;
 import com.early_express.delivery_service.delivery.presentation.internal.dto.request.LastMileCreateRequest;
 import com.early_express.delivery_service.delivery.presentation.internal.dto.response.LastMileAssignDriverResponse;
 import com.early_express.delivery_service.delivery.presentation.internal.dto.response.LastMileCancelResponse;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 public class LastMileInternalController {
 
     private final FinalMileDeliveryService finalMileDeliveryService;
+    private final DeliveryQueryService deliveryQueryService;
 
     /**
      * 최종 배송 생성
@@ -85,5 +89,27 @@ public class LastMileInternalController {
         log.info("[Internal] 배송 취소 완료 - lastMileDeliveryId: {}", lastMileDeliveryId);
 
         return ResponseEntity.ok(LastMileCancelResponse.success(lastMileDeliveryId));
+    }
+
+    /**
+     * 당일 배송 목록 담당자별 그룹화 조회
+     * GET /v1/last-mile/internal/deliveries/today/grouped-by-agent
+     *
+     * Track Service에서 담당자별 배송 목록 확인 시 호출
+     *
+     * @param hubId 허브 ID (optional, 없으면 전체 허브 대상)
+     */
+    @GetMapping("/deliveries/today/grouped-by-agent")
+    public ResponseEntity<TodayDeliveryGroupInternalResponse> getTodayDeliveriesGroupedByAgent(
+            @RequestParam(required = false) String hubId) {
+
+        log.info("[Internal] 당일 배송 담당자별 그룹화 조회 요청 - hubId: {}", hubId);
+
+        TodayDeliveryGroupResponse response = deliveryQueryService.getTodayDeliveriesGroupedByAgent(hubId);
+
+        log.info("[Internal] 당일 배송 조회 완료 - 총 담당자: {}, 총 배송: {}",
+                response.getTotalAgents(), response.getTotalDeliveries());
+
+        return ResponseEntity.ok(TodayDeliveryGroupInternalResponse.from(response));
     }
 }
